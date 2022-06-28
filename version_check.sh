@@ -1,28 +1,37 @@
 #!/bin/bash
 
-version_dir="staging"
+version_checker() {
+    echo "Call the function for version directory: $1"
 
-# Get the file list from the version directory
-declare -a file_list=$(ls -l $version_dir/ | sed 1d | awk -F" " '{print $9}' | awk -F"." '{print $1}' | sort | uniq)
+    version_dir="$1"
 
-# Get the channel list from the files
-declare -a channel_list=$(ls -l $version_dir/ | sed 1d | awk -F" " '{print $9}' | awk -F"." '{print $2}' | sort | uniq)
+    # Get the file list from the version directory
+    declare -a file_list=$(ls -l $version_dir/ | sed 1d | awk -F" " '{print $9}' | awk -F"." '{print $1}' | sort | uniq)
 
-for file_name in ${file_list[@]}
-do
-    for channel_name in ${channel_list[@]}
+    # Get the channel list from the files
+    declare -a channel_list=$(ls -l $version_dir/ | sed 1d | awk -F" " '{print $9}' | awk -F"." '{print $2}' | sort | uniq)
+
+    for file_name in ${file_list[@]}
     do
-        default_file_name="$version_dir/$file_name.$channel_name.default"
-        versions_file_name="$version_dir/$file_name.$channel_name.versions"
+        for channel_name in ${channel_list[@]}
+        do
+            default_file_name="$version_dir/$file_name.$channel_name.default"
+            versions_file_name="$version_dir/$file_name.$channel_name.versions"
 
-        default_version=$(cat $default_file_name)
+            default_version=$(cat $default_file_name)
 
-        grep -w "$default_version" $versions_file_name
-        if [ "$?" = "0" ]
-        then
-            echo "Version: [$default_version] found in file: $versions_file_name"
-        else
-            echo "Version: [$default_version] not found in file: $versions_file_name"
-        fi
+            grep -w "$default_version" $versions_file_name
+            if [ "$?" = "0" ]
+            then
+                echo "Version: [$default_version] found in file: $versions_file_name"
+            else
+                echo "Version: [$default_version] not found in file: $versions_file_name"
+                exit 1
+            fi
+        done
     done
-done
+
+}
+
+# Call version_checker function
+version_checker "staging"

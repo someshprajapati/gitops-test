@@ -1,0 +1,27 @@
+name: pkg-version-check
+
+on:
+  push:
+    branches: [ "main" ]
+
+    paths:
+      - staging
+
+    paths-ignore:
+      - 'released/**'
+
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      - name: Run a version checker script
+        run: bash ./version_check.sh
