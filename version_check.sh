@@ -35,3 +35,6 @@ version_checker() {
 
 # Call version_checker function
 version_checker "staging"
+
+# Call version_checker function for production directory
+version_checker "production"
