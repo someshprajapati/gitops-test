@@ -4,14 +4,14 @@ on:
   push:
     branches: [ "main" ]
 
-    paths:
-      - staging
-
     paths-ignore:
       - 'released/**'
 
   pull_request:
     branches: [ "main" ]
+
+    paths-ignore:
+      - 'released/**'
 
 jobs:
   build:
