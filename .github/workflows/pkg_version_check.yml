@@ -2,13 +2,15 @@ name: pkg-version-check
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
     paths-ignore:
       - 'released/**'
 
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
     paths-ignore:
       - 'released/**'
