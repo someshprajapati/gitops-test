@@ -28,7 +28,7 @@ version_checker() {
                     echo "Version: [$default_version] found in file: $versions_file_name"
                 else
                     echo "Version: [$default_version] not found in file: $versions_file_name"
-                    exit 1
+                    #exit 1
                 fi
             else
                 echo "File [${default_file_name}] is empty"
