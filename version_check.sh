@@ -20,13 +20,18 @@ version_checker() {
 
             default_version=$(cat $default_file_name)
 
-            grep -w "$default_version" $versions_file_name
-            if [ "$?" = "0" ]
-            then
-                echo "Version: [$default_version] found in file: $versions_file_name"
+            if [ -s ${default_file_name} ]
+            then           
+                grep -w "$default_version" $versions_file_name
+                if [ "$?" = "0" ]
+                then
+                    echo "Version: [$default_version] found in file: $versions_file_name"
+                else
+                    echo "Version: [$default_version] not found in file: $versions_file_name"
+                    exit 1
+                fi
             else
-                echo "Version: [$default_version] not found in file: $versions_file_name"
-                exit 1
+                echo "File [${default_file_name}] is empty"
             fi
         done
     done
@@ -38,3 +43,10 @@ version_checker "staging"
 
 # Call version_checker function for production directory
 version_checker "production"
+
+version_validate() {
+    echo "Version validation called"
+    curl -su $MIST_USER:$MIST_PASS "https://software.128technology.com//api/search/artifact?name=128T&repos=rpm-cloud-edge-beta-local" | jq -r '.results[].uri' | sort --version-sort | grep "1.0.3222-1.el7.x86_64"
+}
+
+version_validate
